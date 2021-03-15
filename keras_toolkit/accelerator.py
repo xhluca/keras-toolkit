@@ -2,7 +2,9 @@ import tensorflow as tf
 
 
 def auto_select(verbose=True):
-    """Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU."""
+    """
+    Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU.
+    """
     try:
         tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
         tf.config.experimental_connect_to_cluster(tpu)

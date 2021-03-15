@@ -1,1 +1,1 @@
-from . import image, accelerator, accelerator
+from . import image, accelerator
