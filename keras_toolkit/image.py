@@ -52,6 +52,7 @@ def build_dataset(
     """
     *Build a tf.data.Dataset from a given list of path.*
 
+    {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
     {{bsize}} The batch size.

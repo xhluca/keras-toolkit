@@ -18,7 +18,7 @@ def preprocess_annot(annotation):
 
 
 def preprocess_default(default):
-    default = default2str.get(default, f"default={default}")
+    default = default2str.get(default, str(default))
     return default
 
 
@@ -45,12 +45,14 @@ class FunctionReference:
     @property
     def doc(self):
         doc_template = Template(inspect.getdoc(self.func))
-        kwargs = {}
+        kwargs = {
+            "params": "| Parameter | Type | Default | Description |\n|-|-|-|-|"
+        }
         for arg_name, param in self.signature.parameters.items():
             annot = preprocess_annot(param.annotation)
             default = preprocess_default(param.default)
 
-            kwargs[arg_name] = f"- **{arg_name}** *({annot}; {default})*:"
+            kwargs[arg_name] = f"| **{arg_name}** | *{annot}* | *{default}*"
 
         return doc_template.render(**kwargs)
 
