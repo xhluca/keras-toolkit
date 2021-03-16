@@ -18,7 +18,6 @@ kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
 
 
 
----
 <br>
 
 
@@ -92,6 +91,5 @@ where `b` is the batch size that will be specified when calling build_dataset._
 
 
 
----
 <br>
 
