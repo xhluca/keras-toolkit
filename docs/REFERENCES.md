@@ -1,8 +1,10 @@
+# API References
 
-# `kt.accelerator`
+
+## kt.accelerator
 
 
-## `auto_select`
+### auto_select
 
 ```python
 kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
@@ -14,13 +16,15 @@ kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
 |-|-|-|-|
 | **verbose** | *bool* | `True` | Whether to display which device was selected.
 
+---
 
 
 
-# `kt.image`
+
+## kt.image
 
 
-## `build_dataset`
+### build_dataset
 
 ```python
 kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> 'tf.data.Dataset'
@@ -40,9 +44,11 @@ kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bs
 | **repeat** | *bool* | `True` | Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
 | **shuffle** | *int* | `1024` | Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
 
+---
 
 
-## `build_augmenter`
+
+### build_augmenter
 
 ```python
 kt.image.build_augmenter(with_labels=True) -> Callable
@@ -58,9 +64,11 @@ _Build an augment function that will randomly flip the input image left-right an
 - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
 - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
 
+---
 
 
-## `build_decoder`
+
+### build_decoder
 
 ```python
 kt.image.build_decoder(with_labels: bool = True, target_size: Tuple[int, int] = (256, 256), ext: str = 'jpg') -> Callable
@@ -80,6 +88,8 @@ where `b` is the batch size that will be specified when calling build_dataset._
 **Note**:
 - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
 - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+
+---
 
 
 
