@@ -1,4 +1,4 @@
-from keras_toolkit import accelerator
+import os
 from typing import NamedTuple, List, Optional, Any, NamedTuple
 import inspect
 
@@ -68,7 +68,10 @@ class ModuleReferences(NamedTuple):
     funcs: List[FunctionReference]
 
 
-with open("../templates/REFERENCES.md.jinja2") as f:
+template_path = os.path.join(os.path.dirname(__file__), '..', 'templates', 'REFERENCES.md.jinja2')
+save_path = os.path.join(os.path.dirname(__file__), '..', 'REFERENCES.md')
+
+with open(template_path) as f:
     template = Template(f.read())
 
 
@@ -82,5 +85,5 @@ rendered = template.render(modules=[
     
 ])
 
-with open("../REFERENCES.md", "w") as f:
+with open(save_path, "w") as f:
     f.write(rendered)

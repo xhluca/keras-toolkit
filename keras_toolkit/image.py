@@ -17,7 +17,7 @@ def build_decoder(
 
     {{params}}
     {{with_labels}} Whether the decoder will receive as input a label and output that same label without any change.
-    {{target_size}} A 2-tuple indicating the height and the width of the resized image (resizing is automatically performend).
+    {{target_size}} A 2-tuple indicating the height and the width of the resized image (resizing is automatically performed).
     {{ext}} The extension of the image file. Must be either "png" or "jpg"; no other format is currently supported.
 
     **Note**:

@@ -82,7 +82,7 @@ where `b` is the batch size that will be specified when calling build_dataset._
 | Parameter | Type | Default | Description |
 |-|-|-|-|
 | **with_labels** | *bool* | `True` | Whether the decoder will receive as input a label and output that same label without any change.
-| **target_size** | *Tuple[int, int]* | `(256, 256)` | A 2-tuple indicating the height and the width of the resized image (resizing is automatically performend).
+| **target_size** | *Tuple[int, int]* | `(256, 256)` | A 2-tuple indicating the height and the width of the resized image (resizing is automatically performed).
 | **ext** | *str* | `jpg` | The extension of the image file. Must be either "png" or "jpg"; no other format is currently supported.
 
 **Note**:

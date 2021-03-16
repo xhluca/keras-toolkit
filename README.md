@@ -17,7 +17,7 @@ import keras_toolkit as kt
 # kt reduces the number of lines from ~100 to ~3
 strategy = kt.accelerator.auto_select(verbose=True)
 decoder = kt.image.build_decoder(with_labels=True, target_size=(300, 300))
-dtrain = kt.data.build_dataset(paths, labels, bsize=BATCH_SIZE, decode_fn=decoder)
+dtrain = kt.image.build_dataset(paths, labels, bsize=BATCH_SIZE, decode_fn=decoder)
 
 with strategy.scope():
     model = tf.keras.Sequential([...])
