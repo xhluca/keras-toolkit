@@ -28,7 +28,7 @@ model.fit(...)
 
 ### API References
 
-Get the complete [API reference here](/docs/REFERENCES.md).
+Get the complete [API reference here](https://github.com/xhlulu/keras-toolkit/blob/master/docs/REFERENCES.md).
 
 
 ## Acknowledgement
