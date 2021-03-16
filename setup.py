@@ -20,5 +20,5 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
     install_requires=["tensorflow"],
-    extras_require={"dev": ["pytest", "black"]},
+    extras_require={"dev": ["pytest", "black", "jinja2"]},
 )

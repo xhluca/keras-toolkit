@@ -1,0 +1,19 @@
+# API References
+
+{% for module in modules %}
+## {{module.name}}
+
+{% for func in module.funcs %}
+### {{ func.name }}
+
+```python
+{{ func.sig_desc }}
+```
+
+{{ func.doc }}
+
+---
+
+
+{% endfor %}
+{% endfor %}

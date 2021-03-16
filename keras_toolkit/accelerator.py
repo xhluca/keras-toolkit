@@ -1,8 +1,13 @@
 import tensorflow as tf
 
 
-def auto_select(verbose=True):
-    """Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU."""
+def auto_select(verbose: bool=True) -> "tf.distribute.Strategy":
+    """
+    *Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU.*
+
+    {{params}}
+    {{verbose}} Whether to display which device was selected.
+    """
     try:
         tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
         tf.config.experimental_connect_to_cluster(tpu)
