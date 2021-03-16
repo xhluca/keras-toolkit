@@ -1,4 +1,5 @@
-from typing import NamedTuple, List, Optional, Any
+from keras_toolkit import accelerator
+from typing import NamedTuple, List, Optional, Any, NamedTuple
 import inspect
 
 from jinja2 import Template
@@ -62,16 +63,24 @@ class FunctionReference:
         return doc_template.render(**kwargs)
 
 
+class ModuleReferences(NamedTuple):
+    name: str
+    funcs: List[FunctionReference]
+
+
 with open("../templates/REFERENCES.md.jinja2") as f:
     template = Template(f.read())
 
 
-out = template.render(funcs=[
-    FunctionReference(kt.accelerator.auto_select),
-    FunctionReference(kt.image.build_dataset),
-    FunctionReference(kt.image.build_augmenter),
-    FunctionReference(kt.image.build_decoder),
+rendered = template.render(modules=[
+    ModuleReferences('kt.accelerator', [FunctionReference(kt.accelerator.auto_select)]),
+    ModuleReferences('kt.image', [
+        FunctionReference(kt.image.build_dataset),
+        FunctionReference(kt.image.build_augmenter),
+        FunctionReference(kt.image.build_decoder),
+    ]),
+    
 ])
 
 with open("../REFERENCES.md", "w") as f:
-    f.write(out)
+    f.write(rendered)

@@ -1,4 +1,7 @@
-{%- for func in funcs -%}
+{% for module in modules %}
+## `{{module.name}}`
+
+{% for func in module.funcs %}
 ### `{{ func.name }}`
 
 ```python
@@ -8,4 +11,5 @@
 {{ func.doc }}
 
 
+{% endfor %}
 {% endfor %}

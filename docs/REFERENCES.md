@@ -1,3 +1,7 @@
+
+## `kt.accelerator`
+
+
 ### `auto_select`
 
 ```python
@@ -9,6 +13,11 @@ kt.accelerator.auto_select(verbose: bool = True) -> tensorflow.python.distribute
 | Parameter | Type | Default | Description |
 |-|-|-|-|
 | **verbose** | *bool* | `True` | Whether to display which device was selected.
+
+
+
+
+## `kt.image`
 
 
 ### `build_dataset`
@@ -32,6 +41,7 @@ kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bs
 | **shuffle** | *int* | `1024` | Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
 
 
+
 ### `build_augmenter`
 
 ```python
@@ -47,6 +57,7 @@ _Build an augment function that will randomly flip the input image left-right an
 **Note**:
 - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
 - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+
 
 
 ### `build_decoder`
@@ -69,5 +80,6 @@ where `b` is the batch size that will be specified when calling build_dataset._
 **Note**:
 - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
 - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+
 
 
