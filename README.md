@@ -26,6 +26,10 @@ with strategy.scope():
 model.fit(...)
 ```
 
+### API References
+
+Get the complete [API reference here](/docs/REFERENCES.md).
+
 
 ## Acknowledgement
 
