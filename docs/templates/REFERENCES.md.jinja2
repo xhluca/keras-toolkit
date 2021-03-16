@@ -1,3 +1,4 @@
+{%- for func in funcs -%}
 ### `{{ func.name }}`
 
 ```python
@@ -5,3 +6,6 @@
 ```
 
 {{ func.doc }}
+
+
+{% endfor %}

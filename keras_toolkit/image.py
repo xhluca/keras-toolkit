@@ -1,11 +1,31 @@
 import os
-from typing import List
+from typing import List, Any, Optional, Callable, Tuple, Union, TypeVar
 
 import tensorflow as tf
 
+Label = TypeVar('Label')
 
-def build_decoder(with_labels=True, target_size=(256, 256), ext="jpg"):
-    def decode(path):
+
+def build_decoder(
+    with_labels: bool = True, target_size: Tuple[int, int] = (256, 256), ext: str = "jpg"
+) -> Callable:
+    """
+    _Build a decoder function that will be called by `tf.data.Dataset` every time it wants to
+    fetch an image to add to the next batch. The decoder function will process one sample 
+    at the time and returns a `tf.Tensor` of type `float` and shape `(b, *target_size, 3)`,
+    where `b` is the batch size that will be specified when calling build_dataset._
+
+    {{params}}
+    {{with_labels}} Whether the decoder will receive as input a label and output that same label without any change.
+    {{target_size}} A 2-tuple indicating the height and the width of the resized image (resizing is automatically performend).
+    {{ext}} The extension of the image file. Must be either "png" or "jpg"; no other format is currently supported.
+
+    **Note**:
+    - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+    - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+    """
+
+    def decode(path: str) -> tf.Tensor:
         file_bytes = tf.io.read_file(path)
         if ext == "png":
             img = tf.image.decode_png(file_bytes, channels=3)
@@ -19,13 +39,23 @@ def build_decoder(with_labels=True, target_size=(256, 256), ext="jpg"):
 
         return img
 
-    def decode_with_labels(path, label):
+    def decode_with_labels(path: str, label: Label) -> Tuple[tf.Tensor, Label]:
         return decode(path), label
 
     return decode_with_labels if with_labels else decode
 
 
-def build_augmenter(with_labels=True):
+def build_augmenter(with_labels=True) -> Callable:
+    """
+    _Build an augment function that will randomly flip the input image left-right and up-and-down._
+
+    {{params}}
+    {{with_labels}} Whether the decoder will receive as input a label and output that same label without any change.
+
+    **Note**:
+    - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+    - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
+    """
     def augment(img):
         img = tf.image.random_flip_left_right(img)
         img = tf.image.random_flip_up_down(img)
@@ -39,18 +69,18 @@ def build_augmenter(with_labels=True):
 
 def build_dataset(
     paths: List[str],
-    labels=None,
+    labels: Optional[Any] = None,
     bsize: int = 32,
     cache: bool = True,
-    decode_fn=None,
-    augment_fn=None,
+    decode_fn: Callable = None,
+    augment_fn: Callable = None,
     augment: bool = True,
     repeat: bool = True,
     shuffle: int = 1024,
     cache_dir: str = "",
-):
+) -> tf.data.Dataset:
     """
-    *Build a tf.data.Dataset from a given list of path.*
+    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)*
 
     {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
