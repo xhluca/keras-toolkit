@@ -78,9 +78,9 @@ def build_dataset(
     repeat: bool = True,
     shuffle: int = 1024,
     cache_dir: str = "",
-) -> tf.data.Dataset:
+) -> "tf.data.Dataset":
     """
-    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)*
+    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*
 
     {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.

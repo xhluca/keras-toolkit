@@ -5,7 +5,7 @@
 ### `auto_select`
 
 ```python
-kt.accelerator.auto_select(verbose: bool = True) -> tensorflow.python.distribute.distribute_lib.Strategy
+kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
 ```
 
 *Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU.*
@@ -23,10 +23,10 @@ kt.accelerator.auto_select(verbose: bool = True) -> tensorflow.python.distribute
 ### `build_dataset`
 
 ```python
-kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> tensorflow.python.data.ops.dataset_ops.DatasetV2
+kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> 'tf.data.Dataset'
 ```
 
-*Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)*
+*Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*
 
 | Parameter | Type | Default | Description |
 |-|-|-|-|
