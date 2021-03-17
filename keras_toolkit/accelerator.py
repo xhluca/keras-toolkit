@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def auto_select(verbose: bool=True) -> "tf.distribute.Strategy":
+def auto_select(verbose: bool = True) -> "tf.distribute.Strategy":
     """
     *Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU.*
 

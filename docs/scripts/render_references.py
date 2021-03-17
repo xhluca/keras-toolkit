@@ -68,22 +68,30 @@ class ModuleReferences(NamedTuple):
     funcs: List[FunctionReference]
 
 
-template_path = os.path.join(os.path.dirname(__file__), '..', 'templates', 'REFERENCES.md.jinja2')
-save_path = os.path.join(os.path.dirname(__file__), '..', 'REFERENCES.md')
+template_path = os.path.join(
+    os.path.dirname(__file__), "..", "templates", "REFERENCES.md.jinja2"
+)
+save_path = os.path.join(os.path.dirname(__file__), "..", "REFERENCES.md")
 
 with open(template_path) as f:
     template = Template(f.read())
 
 
-rendered = template.render(modules=[
-    ModuleReferences('kt.accelerator', [FunctionReference(kt.accelerator.auto_select)]),
-    ModuleReferences('kt.image', [
-        FunctionReference(kt.image.build_dataset),
-        FunctionReference(kt.image.build_augmenter),
-        FunctionReference(kt.image.build_decoder),
-    ]),
-    
-])
+rendered = template.render(
+    modules=[
+        ModuleReferences(
+            "kt.accelerator", [FunctionReference(kt.accelerator.auto_select)]
+        ),
+        ModuleReferences(
+            "kt.image",
+            [
+                FunctionReference(kt.image.build_dataset),
+                FunctionReference(kt.image.build_augmenter),
+                FunctionReference(kt.image.build_decoder),
+            ],
+        ),
+    ]
+)
 
 with open(save_path, "w") as f:
     f.write(rendered)
