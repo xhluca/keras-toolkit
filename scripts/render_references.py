@@ -12,6 +12,7 @@ type2str = {
     float: "float",
     str: "str",
     bool: "bool",
+    dict: "dict",
     inspect._empty: "unspecified",
     Optional[Any]: "optional",
 }
@@ -31,16 +32,19 @@ def preprocess_default(default):
 
 
 class FunctionReference:
-    def __init__(self, function):
+    def __init__(self, function, modname=None):
         self.func = function
+
+        if modname is None:
+            self.modname = inspect.getmodule(self.func).__name__.replace(
+                "dl_translate", "dlt"
+            )
+        else:
+            self.modname = modname
 
     @property
     def name(self):
         return self.func.__name__
-
-    @property
-    def modname(self):
-        return inspect.getmodule(self.func).__name__.replace("keras_toolkit", "kt")
 
     @property
     def signature(self):
@@ -55,6 +59,8 @@ class FunctionReference:
         doc_template = Template(inspect.getdoc(self.func))
         kwargs = {"params": "| Parameter | Type | Default | Description |\n|-|-|-|-|"}
         for arg_name, param in self.signature.parameters.items():
+            if arg_name == "self":
+                continue
             annot = preprocess_annot(param.annotation)
             default = preprocess_default(param.default)
 
@@ -68,22 +74,31 @@ class ModuleReferences(NamedTuple):
     funcs: List[FunctionReference]
 
 
-template_path = os.path.join(os.path.dirname(__file__), '..', 'templates', 'REFERENCES.md.jinja2')
-save_path = os.path.join(os.path.dirname(__file__), '..', 'REFERENCES.md')
+template_path = os.path.join(
+    os.path.dirname(__file__), "templates", "references.md.jinja2"
+)
+save_path = os.path.join(os.path.dirname(__file__), "..", "docs", "references.md")
 
 with open(template_path) as f:
     template = Template(f.read())
 
 
-rendered = template.render(modules=[
-    ModuleReferences('kt.accelerator', [FunctionReference(kt.accelerator.auto_select)]),
-    ModuleReferences('kt.image', [
-        FunctionReference(kt.image.build_dataset),
-        FunctionReference(kt.image.build_augmenter),
-        FunctionReference(kt.image.build_decoder),
-    ]),
-    
-])
+rendered = template.render(
+    modules=[
+        ModuleReferences(
+            "kt.accelerator",
+            [FunctionReference(kt.accelerator.auto_select, "kt.accelerator")],
+        ),
+        ModuleReferences(
+            "kt.image",
+            [
+                FunctionReference(kt.image.build_decoder, "kt.image"),
+                FunctionReference(kt.image.build_augmenter, "kt.image"),
+                FunctionReference(kt.image.build_dataset, "kt.image"),
+            ],
+        ),
+    ]
+)
 
 with open(save_path, "w") as f:
     f.write(rendered)

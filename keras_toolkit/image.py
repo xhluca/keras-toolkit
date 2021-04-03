@@ -3,15 +3,17 @@ from typing import List, Any, Optional, Callable, Tuple, Union, TypeVar
 
 import tensorflow as tf
 
-Label = TypeVar('Label')
+Label = TypeVar("Label")
 
 
 def build_decoder(
-    with_labels: bool = True, target_size: Tuple[int, int] = (256, 256), ext: str = "jpg"
+    with_labels: bool = True,
+    target_size: Tuple[int, int] = (256, 256),
+    ext: str = "jpg",
 ) -> Callable:
     """
     _Build a decoder function that will be called by `tf.data.Dataset` every time it wants to
-    fetch an image to add to the next batch. The decoder function will process one sample 
+    fetch an image to add to the next batch. The decoder function will process one sample
     at the time and returns a `tf.Tensor` of type `float` and shape `(b, *target_size, 3)`,
     where `b` is the batch size that will be specified when calling build_dataset._
 
@@ -56,6 +58,7 @@ def build_augmenter(with_labels=True) -> Callable:
     - If `with_labels` is `True`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
     - If `with_labels` is `False`, then the output function will have this signature: `decode(path: str) -> tf.Tensor`
     """
+
     def augment(img):
         img = tf.image.random_flip_left_right(img)
         img = tf.image.random_flip_up_down(img)
