@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="keras-toolkit",
-    version="0.1.0rc3",
+    version="0.1.0rc4",
     author="Xing Han Lu",
     author_email="github@xinghanlu.com",
     description="A collection of functions to help you easily train and run Tensorflow Keras",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/xhlulu/dl-translate",
+    url="https://github.com/xhlulu/keras-toolkit",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
