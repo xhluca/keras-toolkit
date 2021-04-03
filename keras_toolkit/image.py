@@ -80,19 +80,18 @@ def build_dataset(
     augment: bool = True,
     repeat: bool = True,
     shuffle: int = 1024,
-    cache_dir: str = "",
 ) -> "tf.data.Dataset":
     """
-    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*
+    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
 
     {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
     {{bsize}} The batch size.
-    {{cache}} Whether to cache the preprocessed images.
     {{decode_fn}} A custom function that will take as input the paths and output the tensors that will be given to the model.
     {{augment_fn}} A custom function that is applied to the decoded inputs before they are fed to the model.
-    {{augment}} Whether to apply the augment function
+    {{augment}} Whether to apply the augment function.
+    {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
     {{shuffle}} Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
 
@@ -117,12 +116,17 @@ def build_dataset(
     if augment_fn is None:
         augment_fn = build_augmenter(labels is not None)
 
-    AUTO = tf.data.experimental.AUTOTUNE
-    slices = paths if labels is None else (paths, labels)
 
     dset = tf.data.Dataset.from_tensor_slices(slices)
     dset = dset.map(decode_fn, num_parallel_calls=AUTO)
-    dset = dset.cache(cache_dir) if cache else dset
+
+    # APPLY CACHING
+    if cache is True:
+        dset = dset.cache()
+    elif type(cache) is str:
+        os.makedirs(cache, exist_ok=True)
+        dset = dset.cache(cache)
+    
     dset = dset.map(augment_fn, num_parallel_calls=AUTO) if augment else dset
     dset = dset.repeat() if repeat else dset
     dset = dset.shuffle(shuffle) if shuffle else dset
