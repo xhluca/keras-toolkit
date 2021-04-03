@@ -95,6 +95,18 @@ def build_dataset(
     {{augment}} Whether to apply the augment function
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
     {{shuffle}} Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
+
+    ### Example
+
+    ```python
+    paths = ["./train/image1.png", "./train/image2.png", "./train/image3.png"]
+    labels = [0, 1, 0]
+    
+    dtrain = build_dataset(paths, labels)
+    
+    model = tf.keras.Sequential([...])
+    model.fit(dtrain, epochs=1)
+    ```
     """
     if cache_dir != "" and cache is True:
         os.makedirs(cache_dir, exist_ok=True)
