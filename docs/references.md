@@ -7,7 +7,7 @@
 ### auto_select
 
 ```python
-keras_toolkit.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
+kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
 ```
 
 *Automatically select an accelerator depending on availability, and in the following order: TPU, GPU, CPU.*
@@ -29,7 +29,7 @@ keras_toolkit.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.St
 ### build_decoder
 
 ```python
-keras_toolkit.image.build_decoder(with_labels: bool = True, target_size: Tuple[int, int] = (256, 256), ext: str = 'jpg') -> Callable
+kt.image.build_decoder(with_labels: bool = True, target_size: Tuple[int, int] = (256, 256), ext: str = 'jpg') -> Callable
 ```
 
 _Build a decoder function that will be called by `tf.data.Dataset` every time it wants to
@@ -53,7 +53,7 @@ where `b` is the batch size that will be specified when calling build_dataset._
 ### build_augmenter
 
 ```python
-keras_toolkit.image.build_augmenter(with_labels=True) -> Callable
+kt.image.build_augmenter(with_labels=True) -> Callable
 ```
 
 _Build an augment function that will randomly flip the input image left-right and up-and-down._
@@ -72,7 +72,7 @@ _Build an augment function that will randomly flip the input image left-right an
 ### build_dataset
 
 ```python
-keras_toolkit.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> 'tf.data.Dataset'
+kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> 'tf.data.Dataset'
 ```
 
 *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*

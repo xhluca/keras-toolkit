@@ -87,18 +87,14 @@ rendered = template.render(
     modules=[
         ModuleReferences(
             "kt.accelerator",
-            [
-                FunctionReference(
-                    kt.accelerator.auto_select
-                )
-            ],
+            [FunctionReference(kt.accelerator.auto_select, "kt.accelerator")],
         ),
         ModuleReferences(
             "kt.image",
             [
-                FunctionReference(kt.image.build_decoder),
-                FunctionReference(kt.image.build_augmenter),
-                FunctionReference(kt.image.build_dataset),
+                FunctionReference(kt.image.build_decoder, "kt.image"),
+                FunctionReference(kt.image.build_augmenter, "kt.image"),
+                FunctionReference(kt.image.build_dataset, "kt.image"),
             ],
         ),
     ]
