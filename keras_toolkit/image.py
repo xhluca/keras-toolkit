@@ -1,5 +1,6 @@
 import os
 from typing import List, Any, Optional, Callable, Tuple, Union, TypeVar
+import inspect
 
 import tensorflow as tf
 
@@ -76,10 +77,10 @@ def build_dataset(
     bsize: int = 32,
     cache: bool = True,
     decode_fn: Callable = None,
-    augment_fn: Callable = None,
     augment: bool = True,
     repeat: bool = True,
     shuffle: int = 1024,
+    random_state: int = None
 ) -> "tf.data.Dataset":
     """
     *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
@@ -89,11 +90,11 @@ def build_dataset(
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
     {{bsize}} The batch size.
     {{decode_fn}} A custom function that will take as input the paths and output the tensors that will be given to the model.
-    {{augment_fn}} A custom function that is applied to the decoded inputs before they are fed to the model.
-    {{augment}} Whether to apply the augment function.
+    {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
     {{shuffle}} Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
+    {{random_state}} An integer representing the random seed that will be used to create the distribution.
 
     ### Example
 
@@ -113,23 +114,31 @@ def build_dataset(
     if decode_fn is None:
         decode_fn = build_decoder(labels is not None)
 
-    if augment_fn is None:
-        augment_fn = build_augmenter(labels is not None)
-
-
     dset = tf.data.Dataset.from_tensor_slices(slices)
     dset = dset.map(decode_fn, num_parallel_calls=AUTO)
 
-    # APPLY CACHING
+    # Apply caching
     if cache is True:
         dset = dset.cache()
     elif type(cache) is str:
         os.makedirs(cache, exist_ok=True)
         dset = dset.cache(cache)
     
-    dset = dset.map(augment_fn, num_parallel_calls=AUTO) if augment else dset
+    # Apply augmentation
+    if augment is True:
+        augment_fn = build_augmenter(labels is not None)
+        dset = dset.map(augment_fn, num_parallel_calls=AUTO)
+    elif inspect.isfunction(augment):
+        dset = dset.map(augment, num_parallel_calls=AUTO)
+
+    # Apply repeat
     dset = dset.repeat() if repeat else dset
-    dset = dset.shuffle(shuffle) if shuffle else dset
+
+    # Apply shuffle
+    if shuffle is True:
+        dset = dset.shuffle(seed=random_state)
+        
+    # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)
 
     return dset
