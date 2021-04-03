@@ -108,8 +108,8 @@ def build_dataset(
     model.fit(dtrain, epochs=1)
     ```
     """
-    if cache_dir != "" and cache is True:
-        os.makedirs(cache_dir, exist_ok=True)
+    AUTO = tf.data.experimental.AUTOTUNE
+    slices = paths if labels is None else (paths, labels)
 
     if decode_fn is None:
         decode_fn = build_decoder(labels is not None)
