@@ -130,7 +130,10 @@ def build_dataset(
         dset = dset.map(augment_fn, num_parallel_calls=AUTO)
     elif inspect.isfunction(augment):
         dset = dset.map(augment, num_parallel_calls=AUTO)
-
+    elif augment is False:
+        pass
+    else:
+        raise ValueError("The 'augment' argment is invalid. Please choose a boolean or a function.")
     # Apply repeat
     dset = dset.repeat() if repeat else dset
 
