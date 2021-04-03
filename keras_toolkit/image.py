@@ -123,7 +123,12 @@ def build_dataset(
     elif type(cache) is str:
         os.makedirs(cache, exist_ok=True)
         dset = dset.cache(cache)
-    
+    elif cache is False:
+        pass
+    else:
+        raise ValueError("Invalid 'cache' argument. Please choose a boolean or a string.")
+
+
     # Apply augmentation
     if augment is True:
         augment_fn = build_augmenter(labels is not None)
@@ -133,7 +138,8 @@ def build_dataset(
     elif augment is False:
         pass
     else:
-        raise ValueError("The 'augment' argment is invalid. Please choose a boolean or a function.")
+        raise ValueError("Invalid 'augment' argment. Please choose a boolean or a function.")
+    
     # Apply repeat
     dset = dset.repeat() if repeat else dset
 
