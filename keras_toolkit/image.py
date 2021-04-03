@@ -74,9 +74,9 @@ def build_augmenter(with_labels=True) -> Callable:
 def build_dataset(
     paths: List[str],
     labels: Optional[Any] = None,
+    decode_fn: Callable = None,
     bsize: int = 32,
     cache: Union[bool, str] = False,
-    decode_fn: Callable = None,
     augment: Union[bool, Callable] = False,
     repeat: bool = False,
     shuffle: int = 1024,
@@ -93,8 +93,13 @@ def build_dataset(
     {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
-    {{shuffle}} Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
+    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
     {{random_state}} An integer representing the random seed that will be used to create the distribution.
+
+    
+    ### Notes
+    
+    - If set to N, then initially the first N examples from `paths` will be randomly shuffled, and after every batch processed the subsequent paths will be added such that there are always N examples to choose from.
 
     ### Example
 
@@ -144,8 +149,10 @@ def build_dataset(
     dset = dset.repeat() if repeat else dset
 
     # Apply shuffle
-    if shuffle is True:
-        dset = dset.shuffle(seed=random_state)
+    if type(shuffle) is int:
+        dset = dset.shuffle(shuffle, seed=random_state)
+    elif shuffle is True:
+        dset = dset.shuffle(shuffle, seed=random_state)
         
     # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)

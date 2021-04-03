@@ -72,22 +72,39 @@ _Build an augment function that will randomly flip the input image left-right an
 ### build_dataset
 
 ```python
-kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, bsize: int = 32, cache: bool = True, decode_fn: Callable = None, augment_fn: Callable = None, augment: bool = True, repeat: bool = True, shuffle: int = 1024, cache_dir: str = '') -> 'tf.data.Dataset'
+kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, decode_fn: Callable = None, bsize: int = 32, cache: Union[bool, str] = False, augment: Union[bool, Callable] = False, repeat: bool = False, shuffle: int = 1024, random_state: int = None) -> 'tf.data.Dataset'
 ```
 
-*Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*
+*Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
 
 | Parameter | Type | Default | Description |
 |-|-|-|-|
 | **paths** | *List[str]* | *required* | The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
 | **labels** | *optional* | *optional* | The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
 | **bsize** | *int* | `32` | The batch size.
-| **cache** | *bool* | `True` | Whether to cache the preprocessed images.
 | **decode_fn** | *Callable* | *optional* | A custom function that will take as input the paths and output the tensors that will be given to the model.
-| **augment_fn** | *Callable* | *optional* | A custom function that is applied to the decoded inputs before they are fed to the model.
-| **augment** | *bool* | `True` | Whether to apply the augment function
-| **repeat** | *bool* | `True` | Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
-| **shuffle** | *int* | `1024` | Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
+| **augment** | *Union[bool, Callable]* | `False` | This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
+| **cache** | *Union[bool, str]* | `False` | This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
+| **repeat** | *bool* | `False` | Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
+| **shuffle** | *int* | `1024` | Number of examples to start shuffling, corresponding to the buffer size.
+| **random_state** | *int* | *optional* | An integer representing the random seed that will be used to create the distribution.
+
+
+### Notes
+
+- If set to N, then initially the first N examples from `paths` will be randomly shuffled, and after every batch processed the subsequent paths will be added such that there are always N examples to choose from.
+
+### Example
+
+```python
+paths = ["./train/image1.png", "./train/image2.png", "./train/image3.png"]
+labels = [0, 1, 0]
+
+dtrain = build_dataset(paths, labels)
+
+model = tf.keras.Sequential([...])
+model.fit(dtrain, epochs=1)
+```
 
 <br>
 
