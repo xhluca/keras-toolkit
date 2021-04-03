@@ -75,10 +75,10 @@ def build_dataset(
     paths: List[str],
     labels: Optional[Any] = None,
     bsize: int = 32,
-    cache: bool = True,
+    cache: Union[bool, str] = False,
     decode_fn: Callable = None,
-    augment: bool = True,
-    repeat: bool = True,
+    augment: Union[bool, Callable] = False,
+    repeat: bool = False,
     shuffle: int = 1024,
     random_state: int = None
 ) -> "tf.data.Dataset":
