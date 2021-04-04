@@ -19,6 +19,25 @@ kt.accelerator.auto_select(verbose: bool = True) -> 'tf.distribute.Strategy'
 <br>
 
 
+### limit_gpu_memory
+
+```python
+kt.accelerator.limit_gpu_memory(limit: str = None, verbose: bool = True, device: int = 0)
+```
+
+*Limits the amount of GPU memory (VRAM) used by TensorFlow.*
+
+| Parameter | Type | Default | Description |
+|-|-|-|-|
+| **limit** | *str* | *optional* | The limit value in megabytes.
+| **verbose** | *bool* | `True` | Whether to display the restriction message.
+| **device** | *int* | `0` | Which GPU we want to limit the memory, if there are more than one.
+
+**Warning: This function uses experimental features from TensorFlow!**
+
+<br>
+
+
 
 <br>
 

@@ -79,8 +79,8 @@ def build_dataset(
     cache: Union[bool, str] = False,
     augment: Union[bool, Callable] = False,
     repeat: bool = False,
-    shuffle: int = 1024,
-    random_state: int = None
+    shuffle: int = False,
+    random_state: int = None,
 ) -> "tf.data.Dataset":
     """
     *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
@@ -93,12 +93,12 @@ def build_dataset(
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
-    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
+    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size. If you give a boolean, `True` will set the buffer size to `1024`, and False will disable shuffling.
     {{random_state}} An integer representing the random seed that will be used to create the distribution.
 
-    
+
     ### Notes
-    
+
     - If set to N, then initially the first N examples from `paths` will be randomly shuffled, and after every batch processed the subsequent paths will be added such that there are always N examples to choose from.
 
     ### Example
@@ -106,9 +106,9 @@ def build_dataset(
     ```python
     paths = ["./train/image1.png", "./train/image2.png", "./train/image3.png"]
     labels = [0, 1, 0]
-    
+
     dtrain = build_dataset(paths, labels)
-    
+
     model = tf.keras.Sequential([...])
     model.fit(dtrain, epochs=1)
     ```
@@ -131,8 +131,9 @@ def build_dataset(
     elif cache is False:
         pass
     else:
-        raise ValueError("Invalid 'cache' argument. Please choose a boolean or a string.")
-
+        raise ValueError(
+            "Invalid 'cache' argument. Please choose a boolean or a string."
+        )
 
     # Apply augmentation
     if augment is True:
@@ -143,8 +144,10 @@ def build_dataset(
     elif augment is False:
         pass
     else:
-        raise ValueError("Invalid 'augment' argment. Please choose a boolean or a function.")
-    
+        raise ValueError(
+            "Invalid 'augment' argment. Please choose a boolean or a function."
+        )
+
     # Apply repeat
     dset = dset.repeat() if repeat else dset
 
@@ -152,8 +155,8 @@ def build_dataset(
     if type(shuffle) is int:
         dset = dset.shuffle(shuffle, seed=random_state)
     elif shuffle is True:
-        dset = dset.shuffle(shuffle, seed=random_state)
-        
+        dset = dset.shuffle(1024, seed=random_state)
+
     # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)
 

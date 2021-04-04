@@ -87,7 +87,10 @@ rendered = template.render(
     modules=[
         ModuleReferences(
             "kt.accelerator",
-            [FunctionReference(kt.accelerator.auto_select, "kt.accelerator")],
+            [
+                FunctionReference(kt.accelerator.auto_select, "kt.accelerator"),
+                FunctionReference(kt.accelerator.limit_gpu_memory, "kt.accelerator")
+            ],
         ),
         ModuleReferences(
             "kt.image",

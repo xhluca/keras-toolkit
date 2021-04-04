@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="keras-toolkit",
-    version="0.1.0rc5",
+    version="0.1.0rc6",
     author="Xing Han Lu",
     author_email="github@xinghanlu.com",
     description="A collection of functions to help you easily train and run Tensorflow Keras",
