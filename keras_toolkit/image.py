@@ -80,7 +80,7 @@ def build_dataset(
     augment: Union[bool, Callable] = False,
     repeat: bool = False,
     shuffle: int = 1024,
-    random_state: int = None
+    random_state: int = None,
 ) -> "tf.data.Dataset":
     """
     *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
@@ -96,9 +96,9 @@ def build_dataset(
     {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
     {{random_state}} An integer representing the random seed that will be used to create the distribution.
 
-    
+
     ### Notes
-    
+
     - If set to N, then initially the first N examples from `paths` will be randomly shuffled, and after every batch processed the subsequent paths will be added such that there are always N examples to choose from.
 
     ### Example
@@ -106,9 +106,9 @@ def build_dataset(
     ```python
     paths = ["./train/image1.png", "./train/image2.png", "./train/image3.png"]
     labels = [0, 1, 0]
-    
+
     dtrain = build_dataset(paths, labels)
-    
+
     model = tf.keras.Sequential([...])
     model.fit(dtrain, epochs=1)
     ```
@@ -131,8 +131,9 @@ def build_dataset(
     elif cache is False:
         pass
     else:
-        raise ValueError("Invalid 'cache' argument. Please choose a boolean or a string.")
-
+        raise ValueError(
+            "Invalid 'cache' argument. Please choose a boolean or a string."
+        )
 
     # Apply augmentation
     if augment is True:
@@ -143,8 +144,10 @@ def build_dataset(
     elif augment is False:
         pass
     else:
-        raise ValueError("Invalid 'augment' argment. Please choose a boolean or a function.")
-    
+        raise ValueError(
+            "Invalid 'augment' argment. Please choose a boolean or a function."
+        )
+
     # Apply repeat
     dset = dset.repeat() if repeat else dset
 
@@ -153,7 +156,7 @@ def build_dataset(
         dset = dset.shuffle(shuffle, seed=random_state)
     elif shuffle is True:
         dset = dset.shuffle(shuffle, seed=random_state)
-        
+
     # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)
 
