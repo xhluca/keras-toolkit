@@ -2,6 +2,8 @@
 
 *A collection of functions to help you easily train and run Tensorflow Keras*
 
+Get the complete [API reference here](https://github.com/xhlulu/keras-toolkit/blob/master/docs/references.md).
+
 ## Quickstart
 
 Install the library:
@@ -25,10 +27,6 @@ with strategy.scope():
 
 model.fit(...)
 ```
-
-### API References
-
-Get the complete [API reference here](https://github.com/xhlulu/keras-toolkit/blob/master/docs/references.md).
 
 
 ## Acknowledgement

@@ -1,5 +1,6 @@
 import os
 from typing import List, Any, Optional, Callable, Tuple, Union, TypeVar
+import inspect
 
 import tensorflow as tf
 
@@ -73,47 +74,87 @@ def build_augmenter(with_labels=True) -> Callable:
 def build_dataset(
     paths: List[str],
     labels: Optional[Any] = None,
-    bsize: int = 32,
-    cache: bool = True,
     decode_fn: Callable = None,
-    augment_fn: Callable = None,
-    augment: bool = True,
-    repeat: bool = True,
+    bsize: int = 32,
+    cache: Union[bool, str] = False,
+    augment: Union[bool, Callable] = False,
+    repeat: bool = False,
     shuffle: int = 1024,
-    cache_dir: str = "",
+    random_state: int = None
 ) -> "tf.data.Dataset":
     """
-    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model, i.e. `model.fit(data)` where `data=build_dataset(...)`*
+    *Build a tf.data.Dataset from a given list of paths, and optionally labels. This dataset can be used to fit a Keras model*
 
     {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
-    {{bsize}} The batch size.
-    {{cache}} Whether to cache the preprocessed images.
     {{decode_fn}} A custom function that will take as input the paths and output the tensors that will be given to the model.
-    {{augment_fn}} A custom function that is applied to the decoded inputs before they are fed to the model.
-    {{augment}} Whether to apply the augment function
+    {{bsize}} The batch size, i.e. the number of examples processed at once.
+    {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
+    {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
-    {{shuffle}} Number of examples to start shuffling. If set to N, then the first N examples from paths will be randomly shuffled.
+    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
+    {{random_state}} An integer representing the random seed that will be used to create the distribution.
+
+    
+    ### Notes
+    
+    - If set to N, then initially the first N examples from `paths` will be randomly shuffled, and after every batch processed the subsequent paths will be added such that there are always N examples to choose from.
+
+    ### Example
+
+    ```python
+    paths = ["./train/image1.png", "./train/image2.png", "./train/image3.png"]
+    labels = [0, 1, 0]
+    
+    dtrain = build_dataset(paths, labels)
+    
+    model = tf.keras.Sequential([...])
+    model.fit(dtrain, epochs=1)
+    ```
     """
-    if cache_dir != "" and cache is True:
-        os.makedirs(cache_dir, exist_ok=True)
+    AUTO = tf.data.experimental.AUTOTUNE
+    slices = paths if labels is None else (paths, labels)
 
     if decode_fn is None:
         decode_fn = build_decoder(labels is not None)
 
-    if augment_fn is None:
-        augment_fn = build_augmenter(labels is not None)
-
-    AUTO = tf.data.experimental.AUTOTUNE
-    slices = paths if labels is None else (paths, labels)
-
     dset = tf.data.Dataset.from_tensor_slices(slices)
     dset = dset.map(decode_fn, num_parallel_calls=AUTO)
-    dset = dset.cache(cache_dir) if cache else dset
-    dset = dset.map(augment_fn, num_parallel_calls=AUTO) if augment else dset
+
+    # Apply caching
+    if cache is True:
+        dset = dset.cache()
+    elif type(cache) is str:
+        os.makedirs(cache, exist_ok=True)
+        dset = dset.cache(cache)
+    elif cache is False:
+        pass
+    else:
+        raise ValueError("Invalid 'cache' argument. Please choose a boolean or a string.")
+
+
+    # Apply augmentation
+    if augment is True:
+        augment_fn = build_augmenter(labels is not None)
+        dset = dset.map(augment_fn, num_parallel_calls=AUTO)
+    elif inspect.isfunction(augment):
+        dset = dset.map(augment, num_parallel_calls=AUTO)
+    elif augment is False:
+        pass
+    else:
+        raise ValueError("Invalid 'augment' argment. Please choose a boolean or a function.")
+    
+    # Apply repeat
     dset = dset.repeat() if repeat else dset
-    dset = dset.shuffle(shuffle) if shuffle else dset
+
+    # Apply shuffle
+    if type(shuffle) is int:
+        dset = dset.shuffle(shuffle, seed=random_state)
+    elif shuffle is True:
+        dset = dset.shuffle(shuffle, seed=random_state)
+        
+    # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)
 
     return dset
