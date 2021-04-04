@@ -88,8 +88,8 @@ def build_dataset(
     {{ params }}
     {{paths}} The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
-    {{bsize}} The batch size.
     {{decode_fn}} A custom function that will take as input the paths and output the tensors that will be given to the model.
+    {{bsize}} The batch size, i.e. the number of examples processed at once.
     {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
