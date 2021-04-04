@@ -90,8 +90,8 @@ def build_dataset(
     {{labels}} The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
     {{decode_fn}} A custom function that will take as input the paths and output the tensors that will be given to the model.
     {{bsize}} The batch size, i.e. the number of examples processed at once.
-    {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
+    {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
     {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
     {{random_state}} An integer representing the random seed that will be used to create the distribution.
