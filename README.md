@@ -31,4 +31,5 @@ model.fit(...)
 
 ## Acknowledgement
 
-The `auto_select_accelerator` was inspired by [Martin Gorner's Kaggle notebook](https://www.kaggle.com/mgornergoogle/getting-started-with-100-flowers-on-tpu).
+* The `kt.accelerator.auto_select_accelerator` was inspired by [Martin Gorner's Kaggle notebook](https://www.kaggle.com/mgornergoogle/getting-started-with-100-flowers-on-tpu).
+* The `kt.accelerator.limit_gpu_memory` was taken from [Chris Deotte's Kaggle notebook](https://www.kaggle.com/cdeotte/part-2-rapids-tfidfvectorizer-cv-0-700).
