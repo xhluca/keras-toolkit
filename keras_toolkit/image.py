@@ -79,7 +79,7 @@ def build_dataset(
     cache: Union[bool, str] = False,
     augment: Union[bool, Callable] = False,
     repeat: bool = False,
-    shuffle: int = 1024,
+    shuffle: int = False,
     random_state: int = None,
 ) -> "tf.data.Dataset":
     """
@@ -93,7 +93,7 @@ def build_dataset(
     {{cache}} This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
     {{augment}} This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
     {{repeat}} Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
-    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size.
+    {{shuffle}} Number of examples to start shuffling, corresponding to the buffer size. If you give a boolean, `True` will set the buffer size to `1024`, and False will disable shuffling.
     {{random_state}} An integer representing the random seed that will be used to create the distribution.
 
 
@@ -155,7 +155,7 @@ def build_dataset(
     if type(shuffle) is int:
         dset = dset.shuffle(shuffle, seed=random_state)
     elif shuffle is True:
-        dset = dset.shuffle(shuffle, seed=random_state)
+        dset = dset.shuffle(1024, seed=random_state)
 
     # Apply batching
     dset = dset.batch(bsize).prefetch(AUTO)
