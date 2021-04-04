@@ -81,10 +81,10 @@ kt.image.build_dataset(paths: List[str], labels: Union[Any, NoneType] = None, de
 |-|-|-|-|
 | **paths** | *List[str]* | *required* | The full (absolute or relative) paths of the files you want to load as inputs. This could be images or anything you want to preprocess.
 | **labels** | *optional* | *optional* | The target of your predictions. If left blank, the tf.data.Dataset will not output any label alongside your training examples.
-| **bsize** | *int* | `32` | The batch size.
 | **decode_fn** | *Callable* | *optional* | A custom function that will take as input the paths and output the tensors that will be given to the model.
-| **augment** | *Union[bool, Callable]* | `False` | This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
+| **bsize** | *int* | `32` | The batch size, i.e. the number of examples processed at once.
 | **cache** | *Union[bool, str]* | `False` | This can be a boolean (`True` for in-memory caching, `False` for no caching) or a string value representing a path.
+| **augment** | *Union[bool, Callable]* | `False` | This can be a boolean indicating whether to apply default augmentations, or a function that will be applied to the decoded inputs before they are fed to the model.
 | **repeat** | *bool* | `False` | Whether to repeat the dataset after one pass. This should be `True` if it is the training split, and `False` for test.
 | **shuffle** | *int* | `1024` | Number of examples to start shuffling, corresponding to the buffer size.
 | **random_state** | *int* | *optional* | An integer representing the random seed that will be used to create the distribution.
